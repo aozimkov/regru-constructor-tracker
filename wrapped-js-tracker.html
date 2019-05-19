@@ -1,0 +1,87 @@
+<script type="text/javascript">
+// There is the code for tracking goals in regru site constructor
+// autor: Aleksey Ozimkov
+// email: info@7logic.ru
+
+// Add this code into the Site Preferences > Scripts > before </body> when setup completed
+
+// Setting up a constant values
+const YANDEX_COUNTER_ID = XXXXXXXX; // TODO: Add your Yandex metrika counter ID
+const GOALS_CURRENCY = 'RUB'; // TODO: Setup the Currency for gtag
+const GOALS_VALUE_PHONE = 1000; // TODO: Setup the Link goal value
+const GOALS_VALUE_FORM = 1500; // TODO: Setup the Form goal value
+
+// Labels for Yandex Metrika Goals and Google Analytics goals
+// Here is three example goals. Two goals for a phone text link ahd one for the form
+// If you need more feel free to add it here in the bottom and don't forget add them
+// in the "Goals switcher" and "Click Handling below"
+ 
+// TODO: You need to write here event names from Yandex Metrika
+const HEADER_PHONE = "headerPhone" 
+const MAIN_PHONE = "mainPhone"
+const MAIN_FORM = "mainForm"
+
+// Tracking buttons (prefix is page): 
+// TODO: You need to add an ancors to text link or forms in the preferences in REGRU 
+// site constructor. In this example phone links have ancors: header-phone and 
+// main-phone , and main-form for the form ancor
+
+//      Phone links
+var headerPhone = $("a[name='header-phone']").parent();
+var mainPhone = $("a[name='main-phone']").parent();
+
+//      Form buttons
+var mainForm = $("a[name='main-form'] ~ form .btn");
+
+// Matching called goal and value. Sending Goal to GA
+var gtagReachGoal = function(targetname){
+
+    var goalValue;
+    var eventCategory;
+    var eventType;
+
+// Goals switcher
+    switch(targetname){
+        case HEADER_PHONE:
+        case MAIN_PHONE:
+            goalValue = GOALS_VALUE_PHONE;
+            eventCategory = 'phone';
+            eventType = 'click';
+            break;
+        default:
+            goalValue = GOALS_VALUE_FORM;
+            eventCategory = 'form';
+            eventType = 'sent';
+    }
+    
+    var goalParams = {
+        'event_category': eventCategory,
+        'event_label': targetname,
+        'value': goalValue,
+        'curreny': GOALS_CURRENCY
+    }
+
+    gtag('event', eventType, goalParams);
+    console.log("Google analytics goal: " + eventCategory + " " + eventType);
+}
+
+// Tracking function
+var goalTracked = function(event){
+    var targetName = event.data.yandexGoalId;
+    console.log("reached goal " + targetName);
+    
+    // Send goal to yandex metrika
+    ym(YANDEX_COUNTER_ID, 'reachGoal', targetName);
+
+    // Send valued goals to Google Analytics
+    gtagReachGoal(targetName);
+
+    return true;
+}
+
+// Click Handling
+headerPhone.on('click', {yandexGoalId: HEADER_PHONE}, goalTracked);
+mainPhone.on('click', {yandexGoalId: MAIN_PHONE}, goalTracked);
+mainForm.on('click', {yandexGoalId: MAIN_FORM}, goalTracked);
+
+</script>
