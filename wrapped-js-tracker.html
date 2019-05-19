@@ -21,17 +21,23 @@ const HEADER_PHONE = "headerPhone"
 const MAIN_PHONE = "mainPhone"
 const MAIN_FORM = "mainForm"
 
+// # ANCORS
+// Form and links ancors on your REGRU constructor's site
+const ANCOR_HEADER_PHONE = "header-phone";
+const ANCOR_MAIN_PHONE = "main-phone";
+const ANCOR_MAIN_FORM = "main-form";
+
 // Tracking buttons (prefix is page): 
 // TODO: You need to add an ancors to text link or forms in the preferences in REGRU 
 // site constructor. In this example phone links have ancors: header-phone and 
 // main-phone , and main-form for the form ancor
 
 //      Phone links
-var headerPhone = $("a[name='header-phone']").parent();
-var mainPhone = $("a[name='main-phone']").parent();
+var headerPhone = $("a[name='" + ANCOR_HEADER_PHONE + "']").parent();
+var mainPhone = $("a[name='" + ANCOR_MAIN_PHONE + "']").parent();
 
 //      Form buttons
-var mainForm = $("a[name='main-form'] ~ form .btn");
+var mainForm = $("a[name='" + ANCOR_MAIN_FORM + "'] ~ form .btn");
 
 // Matching called goal and value. Sending Goal to GA
 var gtagReachGoal = function(targetname){
